@@ -45,13 +45,16 @@ http_app.listen(app.get('port'), function(){
 var sio = io.listen(http_app, { log: false });
 // sio.set('log level', 2); // remove the debug messages
 sio.sockets.on('connection', function (socket) {
-    console.log('A socket connected!');
+    // console.log('A socket connected!');
+    var userid;
     socket.on('user', function(data) {
+      userid = data.userid;
       clients[data.userid] = socket;
       for (var client in clients) {
         var s = clients[client];
-        if (true || s != socket) {
+        if (userid !== client) {
           s.emit('user', data);
+          socket.emit('user', {'userid': client }); 
         }
       }
     });
@@ -60,10 +63,13 @@ sio.sockets.on('connection', function (socket) {
       for (var client in clients) {
         // broadcast to all sockets listening
         var s = clients[client];
-        if (true || s != socket) {
-          s.emit(client, data);
+        if (userid !== client) {
+          s.emit(userid, data);
         }
       }
     });
-    
+    socket.on('disconnect', function () {
+      delete clients[userid];
+      sio.sockets.emit('userdel', {'userid': userid});
+    });
 });
