@@ -38,9 +38,8 @@ block content
   
       var socket = io.connect('http://localhost:3000/');
   
-      cw = 120;//240;//video.clientWidth;
-      ch = 200;//400;//video.clientHeight;
-      log('width = ' + ch);
+      cw = 200; //240;//video.clientWidth;
+      ch = 120; //400;//video.clientHeight;
       back.width = cw;
       back.height = ch;
       draw(video, backcontext, cw, ch);
@@ -59,4 +58,8 @@ block content
           // Start over! 10 frames a second = 100milliseconds
           setTimeout(function(){ draw(v, bc, w, h); });
       }
+
+      socket.on('my other event', function (data) {
+          console.log(data);
+      });
   

@@ -6,3 +6,9 @@ body {
 a {
   color: #00B7FF;
 }
+
+#sourcevid {
+    width: 200px;
+    height: 120px;
+    border: solid;
+}
