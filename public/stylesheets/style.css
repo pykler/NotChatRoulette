@@ -8,7 +8,12 @@ a {
 }
 
 #sourcevid {
-    width: 200px;
-    height: 120px;
+    width: 400px;
+    height: 300px;
     border: solid;
+}
+
+#users img {
+    width: 400px;
+    height: 300px;
 }

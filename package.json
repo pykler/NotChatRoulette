@@ -1,13 +1,17 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
+  "name": "NotChatRoulette",
+  "version": "0.0.1-5",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app.js"
   },
   "dependencies": {
     "express": "3.0.0rc4",
     "jade": "*",
     "socket.io": "*"
+  },
+  "subdomain": "ncr",
+  "engines": {
+    "node": "0.8.x"
   }
 }

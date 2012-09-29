@@ -8,10 +8,18 @@ block content
   video(autoplay=true,id="sourcevid")
   canvas(id="output")
   div(id="log")
+  div(id="users")
   script
       var log = function(msg) {
          document.getElementById('log').innerHTML = document.getElementById('log').innerHTML + msg + "<br/>";
       };
+      var create_userid = function() {
+        return 'xxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+          return v.toString(16);
+        });
+      }
+      userid = create_userid();
       var video = document.getElementsByTagName('video')[0],
           heading = document.getElementsByTagName('h1')[0];
       window.URL = window.URL || window.webkitURL;
@@ -40,10 +48,29 @@ block content
       var back = document.createElement('canvas');
       var backcontext = back.getContext('2d');
   
-      var socket = io.connect('http://localhost:3000/');
+      var socket = io.connect('http://' + window.location.host + '/');
+
+      /* Setup my video */
+      // var users = {};
+      socket.emit('user', {'userid': userid});
+      socket.on('user', function(data) {
+        // new user signed in
+        var other_user = data.userid;
+        // users[data.userid] = null;
+        function create_display_fn(uid) {
+          var img = document.createElement('img');
+          document.getElementById("users").appendChild(img);
+          return function(data) {
+            console.log(uid);
+            img.src = data.data;
+          }
+        }
+        console.log('Setting up user: ' + data.userid);
+        socket.on(other_user, create_display_fn(other_user));
+      });
   
-      cw = 200; //240;//video.clientWidth;
-      ch = 120; //400;//video.clientHeight;
+      cw = 200; // 100; //240;//video.clientWidth;
+      ch = 150; // 75; //400;//video.clientHeight;
       back.width = cw;
       back.height = ch;
       draw(video, backcontext, cw, ch);
@@ -60,10 +87,5 @@ block content
           socket.emit('video', {'data': stringData});
   
           // Start over! 10 frames a second = 100milliseconds
-          setTimeout(function(){ draw(v, bc, w, h); });
+          setTimeout(function(){ draw(v, bc, w, h); }, 500);
       }
-
-      socket.on('my other event', function (data) {
-          console.log(data);
-      });
-  
