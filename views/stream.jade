@@ -27,7 +27,11 @@ block content
           };
   
           function errorCallback( error ) {
+              if (error.code == 1) {
+              heading.textContent = "You do not have a web cam (or media source)";
+              } else {
               heading.textContent = "An error occurred: [CODE " + error.code + "]";
+              }
           };
       } else {
           heading.textContent = "Native web camera streaming is not supported in this browser!";
