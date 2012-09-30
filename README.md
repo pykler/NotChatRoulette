@@ -10,4 +10,6 @@ To Do List
 
 *Add user list or login script.
 
-*Add moderator
+*Add admin/moderator permissions.
+
+*Add alert/speak/hand up option
