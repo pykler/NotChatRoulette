@@ -4,6 +4,7 @@
 
 var express = require('express')
   , io = require('socket.io')
+  , fs = require('fs')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
