@@ -10,7 +10,3 @@ exports.index = function(req, res){
 exports.stream = function(req, res){
     res.render('stream', {title: 'your webcam'});
 };
-
-exports.st = function(req, res){
-    res.render('socket_test');
-};

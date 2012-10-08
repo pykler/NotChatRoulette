@@ -1,10 +1,5 @@
-/**
- * Module dependencies.
- */
-
 var express = require('express')
   , io = require('socket.io')
-  , fs = require('fs')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
@@ -15,14 +10,11 @@ var app = express();
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
-  fs.readFile(__dirname + '/public/index.html', 'utf8', function(err, text) //Added to use html
-//  app.set('view engine', 'jade');
+  app.set('view engine', 'jade');
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-//   app.use(express.cookieParser('your secret here'));
-//   app.use(express.session());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -40,13 +32,13 @@ var http_app = http.createServer(app);
 var clients = {};
 
 http_app.listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+  console.log("Not Chat Roulette server started on port " + app.get('port'));
 });
 
 var sio = io.listen(http_app, { log: false });
-// sio.set('log level', 2); // remove the debug messages
+sio.set('log level', 2); // remove the debug messages
 sio.sockets.on('connection', function (socket) {
-    // console.log('A socket connected!');
+    console.log('A socket connected!');
     var userid;
     socket.on('user', function(data) {
       userid = data.userid;
@@ -60,7 +52,7 @@ sio.sockets.on('connection', function (socket) {
       }
     });
     socket.on('video', function (data) {
-      // console.log(data);
+      // console.log(data); // lag issue when this is loging the img data
       for (var client in clients) {
         // broadcast to all sockets listening
         var s = clients[client];
