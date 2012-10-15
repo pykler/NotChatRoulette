@@ -25,8 +25,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/stream', routes.stream);
-app.get('/st', routes.st);
-app.get('/users', user.list);
+
 
 var http_app = http.createServer(app);
 var clients = {};
@@ -35,8 +34,8 @@ http_app.listen(app.get('port'), function(){
   console.log("Not Chat Roulette server started on port " + app.get('port'));
 });
 
-var sio = io.listen(http_app, { log: false });
-sio.set('log level', 2); // remove the debug messages
+var sio = io.listen(http_app, { log: true });
+sio.set('log level', 2); // log level 3 or more will have a lag issue
 sio.sockets.on('connection', function (socket) {
     console.log('A socket connected!');
     var userid;

@@ -1,5 +1,7 @@
 extends layout
-// let it be known i hate jade...
+
+// let it be known, i hate jade...
+
 block extra_head
   script(src="/socket.io/socket.io.js")
 
@@ -7,8 +9,24 @@ block content
   #wrap
     #clearfix
       img(src='logo.gif')
-      #errordiv
-      video(autoplay=true,id="sourcevid",width="16",height="9",controls="controls")
+      #wrapindex2 
+        p(id="topic")
+          button(onclick="topicFunction()",id="topic") Change topic
+            script
+              function topicFunction()
+              {
+              var x;
+
+              var topic=prompt("Enter the topic");
+
+              if (topic!=null)
+                {
+                x="TOPIC: " + topic;
+                document.getElementById("topic").innerHTML=x;
+                }
+              }
+      #userwebcamdiv
+      video(autoplay=true,id="sourcevid",controls="controls",poster="cam.jpg")
       #users
       script
         var create_userid = function() {
@@ -19,10 +37,10 @@ block content
         }
         userid = create_userid();
         var video = document.getElementById('sourcevid'),
-            errordiv = document.getElementById('errordiv');
+            userwebcamdiv = document.getElementById('userwebcamdiv');
         window.URL = window.URL || window.webkitURL;
         navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia ||
-                                  navigator.mozGetUserMedia || navigator.msGetUserMedia;
+                                  navigator.mozGetUserMedia || navigator.msGetUserMedia
 
         if(navigator.getUserMedia) {
             navigator.getUserMedia({video: true}, successCallback, errorCallback);
@@ -34,13 +52,13 @@ block content
     
             function errorCallback( error ) {
                 if (error.code == 1) {
-                errordiv.textContent = "You do not have a web cam (or media source)";
+                userwebcamdiv.textContent = "You do not have a web cam (or media source)";
                 } else {
-                errordiv.textContent = "An error occurred: [CODE " + error.code + "]";
+                userwebcamdiv.textContent = "An error occurred: [CODE " + error.code + "]";
                 }
             };
         } else {
-            errordiv.textContent = "Native web camera streaming is not supported in this browser!";
+            userwebcamdiv.textContent = "Native web camera streaming is not supported in this browser!";
         };
     
         var back = document.createElement('canvas');
@@ -64,7 +82,7 @@ block content
           // new user signed in
           var other_user = data.userid;
           // users[data.userid] = null;
-          // console.log('Setting up user: ' + other_user);
+          //console.log('Setting up user: ' + other_user);
           socket.on(other_user, create_display_fn(other_user));
         });
         socket.on('userdel', function(data) {
@@ -76,8 +94,8 @@ block content
           }
         });
     
-        cw = 106; // 100; //240;//video.clientWidth;
-        ch = 80; // 75; //400;//video.clientHeight;
+        cw = 160; // 100; //240;//video.clientWidth;
+        ch = 120; // 75; //400;//video.clientHeight;
         back.width = cw;
         back.height = ch;
         draw(video, backcontext, cw, ch);
@@ -94,6 +112,7 @@ block content
             socket.emit('video', {'data': stringData});
     
             // Start over! 10 frames a second = 100milliseconds
-            setTimeout(function(){ draw(v, bc, w, h); }, 10);
+            setTimeout(function(){ draw(v, bc, w, h); }, 50);
         }
     #footer CopyRight text of some sort
+    br
