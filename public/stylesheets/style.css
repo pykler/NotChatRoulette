@@ -35,6 +35,11 @@ a:active {
   margin: 0 auto 0 auto;
 }
 
+#indexwrap {
+  width: 830px;
+  margin: 0 auto 0 auto;
+}
+
 #sourcevid {
   width: 400px;
   height: 300px;
@@ -62,13 +67,15 @@ a:active {
 
 \\ index file
 
+
+
 #join {
   min-height: 900px;
   font-size: 5;
   text-align: center;
 }
 
-#text1 {
+#discl {
   color: #999;
   text-align: center;
 }
@@ -78,7 +85,7 @@ a:active {
   font-size: 2em;
 }
 
-#wrapindex {
+#loginwrap {
   width: 240px;
   height: 45px;
   background-color: #222;
@@ -89,6 +96,7 @@ a:active {
   border-radius: 50px;
   margin: 0 auto 0 auto;
 }
+
 #wrapindex2 {
   clear: both;
   width: 500px;

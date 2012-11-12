@@ -1,16 +1,16 @@
 extends layout
 
 block content 
-	#wrap
+	#indexwrap
 		img(src='logo.gif')
 		br
 		br
 		br
 		br
 		br
-		#wrapindex 
+		#loginwrap 
 			form(name="usern",action="stream",method="get")
-				Username: input(type="text",name="usern",value="Enter Username",maxlength="15") 
+				Username: input(type="text",name="usern",maxlength="20") 
 				input(type="submit",value="Enter")
 		br
 		br
@@ -20,6 +20,6 @@ block content
 		br
 		br
 
-		#text1 By entering the site I agree to the terms that are not yet defined.
+		#discl By entering the site I agree to the terms that are not yet defined.
 		br
 		#footer CopyRight text of some sort

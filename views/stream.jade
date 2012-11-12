@@ -28,91 +28,91 @@ block content
       #userwebcamdiv
       video(autoplay=true,id="sourcevid",controls="controls",poster="cam.jpg")
       #users
-      script
-        var create_userid = function() {
-          return 'xxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-            return v.toString(16);
-          });
-        }
-        userid = create_userid();
-        var video = document.getElementById('sourcevid'),
-            userwebcamdiv = document.getElementById('userwebcamdiv');
-        window.URL = window.URL || window.webkitURL;
-        navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia ||
-                                  navigator.mozGetUserMedia || navigator.msGetUserMedia
+        script
+          var create_userid = function() {
+            return 'xxxxxxx'.replace(/[xy]/g, function(c) {
+              var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+              return v.toString(16);
+            });
+          }
+          userid = create_userid();
+          var video = document.getElementById('sourcevid'),
+              userwebcamdiv = document.getElementById('userwebcamdiv');
+          window.URL = window.URL || window.webkitURL;
+          navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                                    navigator.mozGetUserMedia || navigator.msGetUserMedia
 
-        if(navigator.getUserMedia) {
-            navigator.getUserMedia({video: true}, successCallback, errorCallback);
-    
-            function successCallback( stream ) {
-                // video.src = stream;
-                video.src = window.URL.createObjectURL(stream);
-            };
-    
-            function errorCallback( error ) {
-                if (error.code == 1) {
-                userwebcamdiv.textContent = "You do not have a web cam (or media source)";
-                } else {
-                userwebcamdiv.textContent = "An error occurred: [CODE " + error.code + "]";
-                }
-            };
-        } else {
-            userwebcamdiv.textContent = "Native web camera streaming is not supported in this browser!";
-        };
-    
-        var back = document.createElement('canvas');
-        var backcontext = back.getContext('2d');
+          if(navigator.getUserMedia) {
+              navigator.getUserMedia({video: true}, successCallback, errorCallback);
+      
+              function successCallback( stream ) {
+                  // video.src = stream;
+                  video.src = window.URL.createObjectURL(stream);
+              };
+      
+              function errorCallback( error ) {
+                  if (error.code == 1) {
+                  userwebcamdiv.textContent = "You do not have a web cam (or media source)";
+                  } else {
+                  userwebcamdiv.textContent = "An error occurred: [CODE " + error.code + "]";
+                  }
+              };
+          } else {
+              userwebcamdiv.textContent = "Native web camera streaming is not supported in this browser!";
+          };
+      
+          var back = document.createElement('canvas');
+          var backcontext = back.getContext('2d');
 
-        function create_display_fn(uid) {
-            var img = document.createElement('img');
-            img.id = 'img'+uid;
-            document.getElementById("users").appendChild(img);
-            return function(data) {
-              img.src = data.data;
+          function create_display_fn(uid) {
+              var img = document.createElement('img');
+              img.id = 'img'+uid;
+              document.getElementById("users").appendChild(img);
+              return function(data) {
+                img.src = data.data;
+              }
             }
-          }
-    
-        var socket = io.connect('http://' + window.location.host + '/');
+      
+          var socket = io.connect('http://' + window.location.host + '/');
 
-        /* Setup my video */
-        // var users = {};
-        socket.emit('user', {'userid': userid});
-        socket.on('user', function(data) {
-          // new user signed in
-          var other_user = data.userid;
-          // users[data.userid] = null;
-          //console.log('Setting up user: ' + other_user);
-          socket.on(other_user, create_display_fn(other_user));
-        });
-        socket.on('userdel', function(data) {
-          var other_user = data.userid;
-          socket.removeAllListeners(other_user);
-          var img = document.getElementById('img'+other_user);
-          if(img) {
-            img.parentNode.removeChild(img);
+          /* Setup my video */
+          // var users = {};
+          socket.emit('user', {'userid': userid});
+          socket.on('user', function(data) {
+            // new user signed in
+            var other_user = data.userid;
+            // users[data.userid] = null;
+            //console.log('Setting up user: ' + other_user);
+            socket.on(other_user, create_display_fn(other_user));
+          });
+          socket.on('userdel', function(data) {
+            var other_user = data.userid;
+            socket.removeAllListeners(other_user);
+            var img = document.getElementById('img'+other_user);
+            if(img) {
+              img.parentNode.removeChild(img);
+            }
+          });
+      
+          cw = 160; // 100; //240;//video.clientWidth;
+          ch = 120; // 75; //400;//video.clientHeight;
+          back.width = cw;
+          back.height = ch;
+          draw(video, backcontext, cw, ch);
+      
+          function draw(v, bc, w, h) {
+      
+              // First, draw it into the backing canvas
+              bc.drawImage(v, 0, 0, w, h);
+      
+              // Grab the pixel data from the backing canvas
+              var stringData=back.toDataURL();
+      
+              // send it on the wire
+              socket.emit('video', {'data': stringData});
+      
+              // Start over! 10 frames a second = 100milliseconds
+              setTimeout(function(){ draw(v, bc, w, h); }, 50);
           }
-        });
-    
-        cw = 160; // 100; //240;//video.clientWidth;
-        ch = 120; // 75; //400;//video.clientHeight;
-        back.width = cw;
-        back.height = ch;
-        draw(video, backcontext, cw, ch);
-    
-        function draw(v, bc, w, h) {
-    
-            // First, draw it into the backing canvas
-            bc.drawImage(v, 0, 0, w, h);
-    
-            // Grab the pixel data from the backing canvas
-            var stringData=back.toDataURL();
-    
-            // send it on the wire
-            socket.emit('video', {'data': stringData});
-    
-            // Start over! 10 frames a second = 100milliseconds
-            setTimeout(function(){ draw(v, bc, w, h); }, 50);
-        }
     #footer CopyRight text of some sort
     br
