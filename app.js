@@ -5,14 +5,6 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
-var gzip = require('gzip');
-
-
-gzip(buffer, 4, function(err, data){
-  // Gzip buffer with compression rate = 4
-  console.log(data);
-});
-
 var app = express();
 
 app.configure(function(){
