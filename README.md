@@ -12,4 +12,4 @@ add facebook login
 twitter or chat feed irc
 
 
-going togive this some face time after the new years.. 
+going to give this some face time after the new years.. 
