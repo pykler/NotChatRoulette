@@ -9,3 +9,7 @@ admin/mod controls and login/access for admin/mod
 image compressing for less lag
 "Talking stick" button
 add facebook login
+twitter or chat feed irc
+
+
+going togive this some face time after the new years.. 
